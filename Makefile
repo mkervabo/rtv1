@@ -6,7 +6,7 @@
 #    By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/19 11:46:19 by mkervabo          #+#    #+#              #
-#    Updated: 2019/04/26 12:13:28 by mkervabo         ###   ########.fr        #
+#    Updated: 2019/04/28 17:18:35 by mkervabo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = RTv1
 CC = gcc
 CFLAGS = -Wall -Wextra -I ./include -g $(shell pkg-config --cflags SDL2) #-fsanitize=address
 
-OBJS = build/main.o build/object.o build/vec3.o build/light.o build/scene.o build/camera.o
+OBJS = build/main.o build/object.o build/vec3.o build/light.o build/scene.o build/camera.o build/color.o
 
 all: $(NAME)
 

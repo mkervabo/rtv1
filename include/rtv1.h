@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 17:11:32 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/27 15:48:29 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/04/28 18:17:07 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ enum e_light_type
 {
 	LIGHT_DIFFUSE,
 	LIGHT_SPECULAR,
+	LIGHT_PHONG
 };
 
 typedef struct	s_color
@@ -67,6 +68,7 @@ typedef struct s_light
 	t_vec3				pos;
 	t_color				color;
 	double				intensity;
+	int					expose;
 }				t_light;
 
 typedef struct s_hit_info
@@ -120,6 +122,7 @@ t_vec3	vec3_divv(t_vec3 a, double v);
 double	vec3_dot(t_vec3 a, t_vec3 b);
 double	vec3_length(t_vec3 v);
 
+t_color color_add(t_color a, t_color b);
 
 t_hit_info	in_sphere(t_sphere *sphere, t_ray *ray);
 t_hit_info	in_cylinder(t_cylinder *cylinder, t_ray *ray);
@@ -129,6 +132,8 @@ t_who	in_objects(t_ray *ray, t_object *objects[], size_t size);
 
 double	receive_light(t_light *light, t_vec3 p, t_object *objects[], size_t size);
 t_color diffuse(t_color object, t_light *light, t_vec3 n, t_vec3 p);
+t_color	specular(t_color object, t_light *light, t_hit_info hit, t_ray *ray);
+t_color	phong(t_color object, t_light *light, t_hit_info hit, t_ray *ray);
 
 extern t_object *objects[];
 extern size_t objects_size;

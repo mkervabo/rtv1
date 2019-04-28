@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 11:45:29 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/27 15:46:30 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/04/27 16:17:01 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,9 +51,9 @@ t_hit_info	in_cone(t_cone *cone, t_ray *ray)
 		v.y = 0;
 		v = vec3_unit(v);
 		hit.n = vec3_unit((t_vec3) {
-			.x = v.x * tan(cone->angle),
-			.y = 1 / tan(cone->angle),
-			.z = v.z * tan(cone->angle)
+			.x = v.x / tan(cone->angle),
+			.y = tan(cone->angle),
+			.z = v.z / tan(cone->angle)
 		});
 	}
 	return (hit);

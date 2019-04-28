@@ -6,11 +6,13 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 15:39:35 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/27 15:49:11 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/04/28 18:38:17 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
+
+#define SHADOW_BIAS 1e-4
 
 void ft_exit(SDL_Renderer* renderer, SDL_Window *win)
 {
@@ -63,26 +65,38 @@ int main() {
 
 			if (t.hit.t >= 0)
 			{
-				t_vec3 p = vec3_add(ray.origin, vec3_multv(ray.direction, t.hit.t - 0.1));
-
+				t_vec3 p = vec3_add(vec3_add(ray.origin, vec3_multv(ray.direction, t.hit.t)), vec3_multv(t.hit.n, SHADOW_BIAS));
+				uint32_t r = 0;
+				uint32_t g = 0;
+				uint32_t b = 0;
+				size_t mod = 0;
 				size_t i = 0;
 				while (i < lights_size)
 				{
 					double distance = receive_light(lights[i], p, objects, objects_size);
+					
 					if (distance >= 0)
 					{
-						t_color	new_color = diffuse(objects[t.i]->color, lights[i], t.hit.n, p);
-						SDL_SetRenderDrawColor(renderer,
-							new_color.r,
-							new_color.g,
-							new_color.b,
-							255
-						);
+						t_color color;
+						if (lights[i]->type == LIGHT_PHONG)
+							color = phong(objects[t.i]->color, lights[i], t.hit, &ray);
+						if (lights[i]->type == LIGHT_DIFFUSE)
+							color = diffuse(objects[t.i]->color, lights[i], t.hit.n, p);
+						if (lights[i]->type == LIGHT_SPECULAR)
+							color = specular(objects[t.i]->color, lights[i], t.hit, &ray);
+						r += color.r;
+						g += color.g;
+						b += color.b;
+						mod++;
 					}
-					else
-						SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 					i++;
 				}
+				SDL_SetRenderDrawColor(renderer,
+							mod ? r / mod : 0,
+							mod ? g / mod : 0,
+							mod ? b / mod : 0,
+							255
+						);
 			}
 			else
 				SDL_SetRenderDrawColor(renderer, 211, 211, 211, 255);	

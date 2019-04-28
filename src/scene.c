@@ -5,10 +5,10 @@ t_object *objects[] = {
 		.super = {
 			TYPE_SPHERE,
 			{ 0, 1, 0 },
-			{ 
-				.r = 135,
-				.g = 206,
-				.b = 235
+			{
+				138,
+				43,
+				226
 			}
 		},
 		.r = 0.15
@@ -29,7 +29,7 @@ t_object *objects[] = {
 	&((t_cone) {
 		.super = {
 			TYPE_CONE,
-			{ -0.3, 1, 0 },
+			{ -0.3, 1.1, 0 },
 			{ 
 				.r = 154,
 				.g = 205,
@@ -54,13 +54,37 @@ size_t objects_size = sizeof(objects) / sizeof(*objects);
 
 t_light *lights[] = {
 	&((t_light){
-		.pos = { 0, 2, 1 },
+		LIGHT_DIFFUSE,
+		.pos = { -9, 1, 0 },
 		.color = {
 			.r = 255,
 			.g = 255,
 			.b = 255
 		},
-		.intensity = 0.5
+		.intensity = 0.5,
+		.expose = 21
+	}),
+	/*&((t_light){
+		LIGHT_DIFFUSE,
+		.pos = { 9, 1, 0 },
+		.color = {
+			.r = 255,
+			.g = 255,
+			.b = 255
+		},
+		.intensity = 0.5,
+		.expose = 21
+	}),*/
+	&((t_light){
+		LIGHT_DIFFUSE,
+		.pos = { 1, 1, 1 },
+		.color = {
+			.r = 255,
+			.g = 255,
+			.b = 255
+		},
+		.intensity = 0.5,
+		.expose = 21
 	}),
 };
 
