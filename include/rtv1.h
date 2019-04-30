@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 17:11:32 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/28 18:17:07 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/04/29 18:22:51 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ enum e_light_type
 
 typedef struct	s_color
 {
-	uint8_t		r;
-	uint8_t		g;
-	uint8_t		b;
+	double		r;
+	double		g;
+	double		b;
 }				t_color;
 
 typedef struct s_light
 {
-	enum e_light_type	type;
+	
 	t_vec3				pos;
 	t_color				color;
 	double				intensity;
@@ -87,6 +87,7 @@ typedef struct	s_who
 typedef struct	s_object
 {
 	enum e_object_type	type;
+	enum e_light_type	light;
 	t_vec3				pos;
 	t_color				color;
 }				t_object;

@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/26 15:37:58 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/28 18:31:14 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/04/29 16:18:49 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ double receive_light(t_light *light, t_vec3 p, t_object *objects[], size_t size)
 		return (dist);
 }
 
-static uint8_t	clamp_rgb(double value)
+uint8_t	clamp_rgb(double value)
 {
 	if (value < 0)
 		return (0);
@@ -51,9 +51,9 @@ t_color diffuse(t_color object, t_light *light, t_vec3 n, t_vec3 p)
 	 
 	n_light = vec3_unit(vec3_sub(p, light->pos));
 	i = vec3_dot(n_light, n) * light->intensity;
-	color.r = clamp_rgb(object.r - light->color.r * i);
-	color.g = clamp_rgb(object.g - light->color.g * i);
-	color.b = clamp_rgb(object.b - light->color.b * i);
+	color.r = light->color.r * i;
+	color.g = light->color.g * i;
+	color.b = light->color.b * i;
 	return (color);
 }
 
@@ -71,9 +71,11 @@ t_color	specular(t_color object, t_light *light, t_hit_info hit, t_ray *ray)
 	if (light->expose % 2 == 0)
 		light->expose += 1;
 	i = pow(vec3_dot(n_light, r), light->expose);
-	color.r = clamp_rgb(object.r - light->color.r * i);
-	color.g = clamp_rgb(object.g - light->color.g * i);
-	color.b = clamp_rgb(object.b - light->color.b * i);
+	if (i > 0)
+		i = 0;
+	color.r = light->color.r * i;
+	color.g = light->color.g * i;
+	color.b = light->color.b * i;
 	return (color);
 }
 
@@ -92,8 +94,8 @@ t_color	phong(t_color object, t_light *light, t_hit_info hit, t_ray *ray)
 	if (light->expose % 2 == 0)
 		light->expose += 1;
 	dot = clamp_rgb(-pow(vec3_dot(vec3_unit(vec3_sub(p, light->pos)), r), light->expose) * 255);
-	color.r = clamp_rgb(object.r - light->color.r * i + dot);
-	color.g = clamp_rgb(object.g - light->color.g * i + dot);
-	color.b = clamp_rgb(object.b - light->color.b * i + dot);
+	color.r = light->color.r * i - dot;
+	color.g = light->color.g * i - dot;
+	color.b = light->color.b * i - dot;
 	return (color);
 }

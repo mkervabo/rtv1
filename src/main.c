@@ -6,13 +6,14 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 15:39:35 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/28 18:38:17 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/04/29 18:23:18 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
 #define SHADOW_BIAS 1e-4
+uint8_t	clamp_rgb(double value);
 
 void ft_exit(SDL_Renderer* renderer, SDL_Window *win)
 {
@@ -66,10 +67,10 @@ int main() {
 			if (t.hit.t >= 0)
 			{
 				t_vec3 p = vec3_add(vec3_add(ray.origin, vec3_multv(ray.direction, t.hit.t)), vec3_multv(t.hit.n, SHADOW_BIAS));
-				uint32_t r = 0;
-				uint32_t g = 0;
-				uint32_t b = 0;
-				size_t mod = 0;
+				double r = 0;
+				double g = 0;
+				double b = 0;
+				bool mod = false;
 				size_t i = 0;
 				while (i < lights_size)
 				{
@@ -78,23 +79,24 @@ int main() {
 					if (distance >= 0)
 					{
 						t_color color;
-						if (lights[i]->type == LIGHT_PHONG)
+						if (objects[t.i]->light == LIGHT_PHONG)
 							color = phong(objects[t.i]->color, lights[i], t.hit, &ray);
-						if (lights[i]->type == LIGHT_DIFFUSE)
+						if (objects[t.i]->light == LIGHT_DIFFUSE)
 							color = diffuse(objects[t.i]->color, lights[i], t.hit.n, p);
-						if (lights[i]->type == LIGHT_SPECULAR)
+						if (objects[t.i]->light == LIGHT_SPECULAR)
 							color = specular(objects[t.i]->color, lights[i], t.hit, &ray);
 						r += color.r;
 						g += color.g;
 						b += color.b;
-						mod++;
+						mod = true;
 					}
+					
 					i++;
 				}
 				SDL_SetRenderDrawColor(renderer,
-							mod ? r / mod : 0,
-							mod ? g / mod : 0,
-							mod ? b / mod : 0,
+							mod ? clamp_rgb(objects[t.i]->color.r - r) : 0,
+							mod ? clamp_rgb(objects[t.i]->color.g - g) : 0,
+							mod ? clamp_rgb(objects[t.i]->color.b - b) : 0,
 							255
 						);
 			}
