@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 17:11:32 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/29 18:22:51 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/04/30 13:57:19 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,9 @@ typedef struct	s_object
 	enum e_light_type	light;
 	t_vec3				pos;
 	t_color				color;
+	double				x_rot;
+	double				y_rot;
+	double				z_rot;
 }				t_object;
 
 typedef struct	s_sphere
@@ -122,6 +125,8 @@ t_vec3	vec3_mult(t_vec3 a, t_vec3 b);
 t_vec3	vec3_divv(t_vec3 a, double v);
 double	vec3_dot(t_vec3 a, t_vec3 b);
 double	vec3_length(t_vec3 v);
+
+t_vec3	vec3_rotate(t_vec3 v, double x, double y, double z);
 
 t_color color_add(t_color a, t_color b);
 

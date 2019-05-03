@@ -10,60 +10,67 @@ t_object *objects[] = {
 				138,
 				43,
 				226
-				0,
-				0,
-				0
 			}
 		},
 		.r = 0.15
-	}),*/
+	}),
 	&((t_cylinder) {
 		.super = {
 			TYPE_CYLINDER,
 			LIGHT_PHONG,
 			{ 0.3, 1, 0 },
-			{ 
+			.color = { 
 				.r = 0,
 				.g = 0,
 				.b = 180
-			}
+			},
+			.x_rot = M_PI / 2
 		},
 		.r = 0.1
 		
-	}),
+	}),*/
 	&((t_cone) {
 		.super = {
 			TYPE_CONE,
-			LIGHT_DIFFUSE,
-			{ -0.3, 1.1, 0 },
-			{ 
+			LIGHT_PHONG,
+			{ 0, 1.1, 0 },
+			.color =  { 
 				.r = 154,
 				.g = 205,
 				.b = 50
-			}
+			},
+			//.z_rot = M_PI / 2
+			.x_rot = M_PI / 2
 		},
 		.angle = M_PI / 10
-		
+	}),
+	/*&((t_object) {
+		TYPE_PLANE,
+		LIGHT_DIFFUSE,
+		{ -2, 0, 0 },
+		.color =  {
+			0,
+			100,
+			0
+		},
+		.x_rot = M_PI / 2
 	}),
 	&((t_object) {
 		TYPE_PLANE,
 		LIGHT_DIFFUSE,
-		{ 0, 0.9, 0 },
-		{
-			/*.r = 255,
-			.g = 215,
-			.b = 0*/
-			0,
+		{ 0, 0, 0 },
+		.color =  {
 			100,
-			0
+			100,
+			100
 		}
-	}),
+	}),*/
 };
 
 size_t objects_size = sizeof(objects) / sizeof(*objects);
 
 t_light *lights[] = {
-	/*&((t_light){
+	&((t_light){
 		.pos = { -9, 1, 0 },
 		.color = {
 			.r = 255,
@@ -72,8 +79,8 @@ t_light *lights[] = {
 		},
 		.intensity = 0.2,
 		.expose = 21
-	}),*/
-	/*&((t_light){
+	}),
+	&((t_light){
 		.pos = { 0.1, 4.3, 0 },
 		.color = {
 			.r = 255,
@@ -82,7 +89,7 @@ t_light *lights[] = {
 		},
 		.intensity = 0.2,
 		.expose = 21
-	}),*/
+	}),
 	&((t_light){
 		.pos = { 1, 1, 1 },
 		.color = {

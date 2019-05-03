@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 11:45:29 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/27 16:17:01 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/04/30 18:57:10 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,31 +104,35 @@ t_hit_info	in_plane(t_ray *ray)
 	return (hit);
 }
 
-t_who		in_objects(t_ray *ray, t_object *objects[], size_t size)
+t_who		in_objects(t_ray *r, t_object *objects[], size_t size)
 {
 	t_hit_info hit;
-	t_who t_max;
+	t_who	t_max;
+	t_ray	ray;
 	size_t i;
 
 	i = 0;
 	t_max.hit.t = INFINITY;
 	while(i < size)
 	{
-		ray->origin = vec3_sub(ray->origin, objects[i]->pos);
+		ray = *r;
+		ray.origin = vec3_sub(ray.origin, objects[i]->pos);
+		ray.origin = vec3_rotate(ray.origin, -objects[i]->x_rot, -objects[i]->y_rot, -objects[i]->z_rot);
+		ray.direction = vec3_rotate(ray.direction, -objects[i]->x_rot, -objects[i]->y_rot, -objects[i]->z_rot);
 		if (objects[i]->type == TYPE_SPHERE)
-			hit = in_sphere((t_sphere *)objects[i], ray);
+			hit = in_sphere((t_sphere *)objects[i], &ray);
 		if (objects[i]->type == TYPE_CYLINDER)
-			hit = in_cylinder((t_cylinder *)objects[i], ray);
+			hit = in_cylinder((t_cylinder *)objects[i], &ray);
 		if (objects[i]->type == TYPE_CONE)
-			hit = in_cone((t_cone *)objects[i], ray);
+			hit = in_cone((t_cone *)objects[i], &ray);
 		if (objects[i]->type == TYPE_PLANE)
-			hit = in_plane(ray);
+			hit = in_plane(&ray);
 		if (hit.t > 0 && hit.t < t_max.hit.t)
 		{
+			hit.n = vec3_rotate(hit.n, objects[i]->x_rot, objects[i]->y_rot, objects[i]->z_rot);
 			t_max.hit = hit;
 			t_max.i = i;
 		}
-		ray->origin = vec3_add(ray->origin, objects[i]->pos);
 		i++;
 	}
 	if (t_max.hit.t == INFINITY)
