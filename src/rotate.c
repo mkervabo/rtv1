@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/30 13:47:30 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/30 14:18:56 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/15 10:15:16 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ static t_vec3	vec3_rotate_z(t_vec3 v, double angle)
 	});
 }
 
-t_vec3	vec3_rotate(t_vec3 v, double x, double y, double z)
+t_vec3	vec3_rotate(t_vec3 v, t_vec3 rot)
 {
-	v = vec3_rotate_x(v, x);
-	v = vec3_rotate_y(v, y);
-	v = vec3_rotate_z(v, z);
+	v = vec3_rotate_x(v, rot.x);
+	v = vec3_rotate_y(v, rot.y);
+	v = vec3_rotate_z(v, rot.z);
 
 	return (v);
 }

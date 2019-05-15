@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 11:45:29 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/30 18:57:10 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/15 10:16:35 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ t_who		in_objects(t_ray *r, t_object *objects[], size_t size)
 			hit = in_plane(&ray);
 		if (hit.t > 0 && hit.t < t_max.hit.t)
 		{
-			hit.n = vec3_rotate(hit.n, objects[i]->x_rot, objects[i]->y_rot, objects[i]->z_rot);
+			hit.n = vec3_rotate(hit.n, objects[i]->rot);
 			t_max.hit = hit;
 			t_max.i = i;
 		}

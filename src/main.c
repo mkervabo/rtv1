@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 15:39:35 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/29 18:23:18 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/12 14:53:59 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,36 +67,12 @@ int main() {
 			if (t.hit.t >= 0)
 			{
 				t_vec3 p = vec3_add(vec3_add(ray.origin, vec3_multv(ray.direction, t.hit.t)), vec3_multv(t.hit.n, SHADOW_BIAS));
-				double r = 0;
-				double g = 0;
-				double b = 0;
-				bool mod = false;
-				size_t i = 0;
-				while (i < lights_size)
-				{
-					double distance = receive_light(lights[i], p, objects, objects_size);
-					
-					if (distance >= 0)
-					{
-						t_color color;
-						if (objects[t.i]->light == LIGHT_PHONG)
-							color = phong(objects[t.i]->color, lights[i], t.hit, &ray);
-						if (objects[t.i]->light == LIGHT_DIFFUSE)
-							color = diffuse(objects[t.i]->color, lights[i], t.hit.n, p);
-						if (objects[t.i]->light == LIGHT_SPECULAR)
-							color = specular(objects[t.i]->color, lights[i], t.hit, &ray);
-						r += color.r;
-						g += color.g;
-						b += color.b;
-						mod = true;
-					}
-					
-					i++;
-				}
+				t_color color_light = { 0, 0, 0};
+				bool mod = apply_light(&color_light, &ray, t, p);
 				SDL_SetRenderDrawColor(renderer,
-							mod ? clamp_rgb(objects[t.i]->color.r - r) : 0,
-							mod ? clamp_rgb(objects[t.i]->color.g - g) : 0,
-							mod ? clamp_rgb(objects[t.i]->color.b - b) : 0,
+							mod ? clamp_rgb(objects[t.i]->color.r -  color_light.r) : 0,
+							mod ? clamp_rgb(objects[t.i]->color.g -  color_light.g) : 0,
+							mod ? clamp_rgb(objects[t.i]->color.b -  color_light.b) : 0,
 							255
 						);
 			}
