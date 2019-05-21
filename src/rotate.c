@@ -6,12 +6,11 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/30 13:47:30 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/15 10:15:16 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/21 14:28:37 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
-
 
 static t_vec3	vec3_rotate_x(t_vec3 v, double angle)
 {
@@ -23,7 +22,6 @@ static t_vec3	vec3_rotate_x(t_vec3 v, double angle)
 		.y = v.y * cos_a - v.z * sin_a,
 		.z = v.y * sin_a + v.z * cos_a,
 	});
-	
 }
 
 static t_vec3	vec3_rotate_y(t_vec3 v, double angle)
@@ -50,11 +48,10 @@ static t_vec3	vec3_rotate_z(t_vec3 v, double angle)
 	});
 }
 
-t_vec3	vec3_rotate(t_vec3 v, t_vec3 rot)
+t_vec3			vec3_rotate(t_vec3 v, t_vec3 rot)
 {
 	v = vec3_rotate_x(v, rot.x);
 	v = vec3_rotate_y(v, rot.y);
 	v = vec3_rotate_z(v, rot.z);
-
 	return (v);
 }

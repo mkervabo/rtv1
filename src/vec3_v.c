@@ -1,22 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   color.c                                            :+:      :+:    :+:   */
+/*   vec3_v.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/04/28 17:12:08 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/04/28 18:13:05 by mkervabo         ###   ########.fr       */
+/*   Created: 2019/05/21 14:30:35 by mkervabo          #+#    #+#             */
+/*   Updated: 2019/05/21 14:32:11 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 
-t_color color_add(t_color a, t_color b)
+t_vec3	vec3_multv(t_vec3 a, double v)
 {
-	return ((t_color) {
-		.r = (a.r + b.r),
-		.g = (a.g + b.g),
-		.b = (a.b + b.b)
+	return ((t_vec3) {
+		.x = a.x * v,
+		.y = a.y * v,
+		.z = a.z * v
 	});
+}
+
+t_vec3	vec3_divv(t_vec3 a, double v)
+{
+	return ((t_vec3) {
+		.x = a.x / v,
+		.y = a.y / v,
+		.z = a.z / v
+	});
+}
+
+t_vec3	vec3_unit(t_vec3 v)
+{
+	return (vec3_divv(v, vec3_length(v)));
 }

@@ -6,25 +6,25 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 15:39:51 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/21 10:44:24 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/21 14:27:20 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "toml.h"
 
-bool				read_window(t_toml_table *toml, t_win *win)
+bool		read_window(t_toml_table *toml, t_win *win)
 {
 	t_toml	*value;
 	double	width;
 	double	height;
 
-	if(!(value = table_get(toml, "width")))
+	if (!(value = table_get(toml, "width")))
 		return (false);
 	if (!read_digit(value, &width))
 		return (false);
 	win->width = width;
-	if(!(value = table_get(toml, "height")))
+	if (!(value = table_get(toml, "height")))
 		return (false);
 	if (!read_digit(value, &height))
 		return (false);
@@ -35,7 +35,7 @@ bool				read_window(t_toml_table *toml, t_win *win)
 	return (true);
 }
 
-bool				read_digit(t_toml *toml, double *digit)
+bool		read_digit(t_toml *toml, double *digit)
 {
 	if (toml->type == TOML_FLOAT)
 		*digit = toml->value.float_v;
@@ -59,10 +59,9 @@ int			ft_strcmp(const char *s1, const char *s2)
 t_light		**read_lights(t_toml_table *toml, size_t *size)
 {
 	t_light		**lights;
-	t_toml			*v;
-	size_t			i;
+	t_toml		*v;
+	size_t		i;
 
-	
 	if (read_toml_type(toml, &v, "lights", TOML_ARRAY) == false)
 		return (NULL);
 	if (v->value.array_v->len == 0
@@ -81,9 +80,9 @@ t_light		**read_lights(t_toml_table *toml, size_t *size)
 	return (lights);
 }
 
-t_object		**read_objects(t_toml_table *toml, size_t *size)
+t_object	**read_objects(t_toml_table *toml, size_t *size)
 {
-	t_object		**objects;
+	t_object		**objs;
 	t_toml			*v;
 	size_t			i;
 
@@ -93,19 +92,19 @@ t_object		**read_objects(t_toml_table *toml, size_t *size)
 		|| v->value.array_v->inner[0].type != TOML_TABLE)
 		return (NULL);
 	*size = v->value.array_v->len;
-	if (!(objects = malloc(sizeof(t_object*) * *size)))
+	if (!(objs = malloc(sizeof(t_object*) * *size)))
 		return (NULL);
 	i = 0;
 	while (i < *size)
 	{
-		if (!(objects[i] = read_object(v->value.array_v->inner[i].value.table_v)))
+		if (!(objs[i] = read_object(v->value.array_v->inner[i].value.table_v)))
 			return (NULL);
 		i++;
 	}
-	return (objects);
+	return (objs);
 }
 
-bool			read_camera(t_toml_table *toml, t_cam *cam)
+bool		read_camera(t_toml_table *toml, t_cam *cam)
 {
 	t_toml	*camera;
 	t_toml	*value;

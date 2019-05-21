@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_super.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 14:16:01 by mkervabo          #+#    #+#             */
+/*   Updated: 2019/05/21 14:21:47 by mkervabo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rtv1.h"
 #include "toml.h"
 
-static bool			read_color(t_toml_table *toml, t_color *color)
+static bool	read_color(t_toml_table *toml, t_color *color)
 {
 	t_toml	*value;
 
@@ -23,7 +35,7 @@ static bool			read_color(t_toml_table *toml, t_color *color)
 	return (true);
 }
 
-bool				read_t_vec3(t_toml_table *toml, t_vec3 *vec)
+bool		read_t_vec3(t_toml_table *toml, t_vec3 *vec)
 {
 	t_toml	*value;
 
@@ -53,7 +65,8 @@ static bool	read_light_type(char *light, enum e_light_type *type)
 	return (true);
 }
 
-bool					read_toml_type(t_toml_table *toml, t_toml **value, char *name, enum e_toml_type type)
+bool		read_toml_type(t_toml_table *toml, t_toml **value, char *name,
+	enum e_toml_type type)
 {
 	if (!(*value = table_get(toml, name)))
 		return (false);
@@ -62,7 +75,7 @@ bool					read_toml_type(t_toml_table *toml, t_toml **value, char *name, enum e_t
 	return (true);
 }
 
-t_light				*read_light(t_toml_table *toml)
+t_light		*read_light(t_toml_table *toml)
 {
 	t_toml	*type;
 	t_light	*light;
@@ -90,7 +103,7 @@ t_light				*read_light(t_toml_table *toml)
 	return (light);
 }
 
-bool				read_super(t_toml_table *toml, t_object *object)
+static bool	read_super_p_r(t_toml_table *toml, t_object *object)
 {
 	t_toml		*value;
 
@@ -113,6 +126,15 @@ bool				read_super(t_toml_table *toml, t_object *object)
 		object->rot = (t_vec3) {
 			0, 0, 0
 		};
+	return (true);
+}
+
+bool		read_super(t_toml_table *toml, t_object *object)
+{
+	t_toml		*value;
+
+	if (!read_super_p_r(toml, object))
+		return (false);
 	if (read_toml_type(toml, &value, "color", TOML_TABLE) == false)
 		return (false);
 	if (!read_color(value->value.table_v, &object->color))

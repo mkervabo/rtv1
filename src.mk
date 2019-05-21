@@ -1,0 +1,11 @@
+SRCS += src/apply_light.c
+SRCS += src/camera.c
+SRCS += src/light.c
+SRCS += src/main.c
+SRCS += src/object.c
+SRCS += src/read.c
+SRCS += src/read_object.c
+SRCS += src/read_super.c
+SRCS += src/rotate.c
+SRCS += src/vec3.c
+SRCS += src/vec3_v.c

@@ -1,7 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_object.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/05/21 14:05:01 by mkervabo          #+#    #+#             */
+/*   Updated: 2019/05/21 14:54:13 by mkervabo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "rtv1.h"
 #include "toml.h"
 
-static t_object	*read_plane(t_toml_table *toml)
+void				*nfree(void *ptr)
+{
+	free(ptr);
+	return (NULL);
+}
+
+static t_object		*read_plane(t_toml_table *toml)
 {
 	t_object	*plane;
 
@@ -9,15 +27,12 @@ static t_object	*read_plane(t_toml_table *toml)
 	if (!(plane = malloc(sizeof(t_object))))
 		return (NULL);
 	if (!read_super(toml, plane))
-	{
-		free(plane);
-		return (NULL);
-	}
+		return (nfree(plane));
 	plane->type = TYPE_PLANE;
 	return (plane);
 }
 
-static t_cone	*read_cone(t_toml_table *toml)
+static t_cone		*read_cone(t_toml_table *toml)
 {
 	t_cone	*cone;
 	t_toml	*angle;
@@ -26,24 +41,13 @@ static t_cone	*read_cone(t_toml_table *toml)
 	if (!(cone = malloc(sizeof(t_cone))))
 		return (NULL);
 	if (!(angle = table_get(toml, "angle")))
-		return (NULL);
-	if (!read_super(toml, &cone->super))
-	{
-		free(cone);
-		return (NULL);
-	}
-	if (read_digit(angle, &cone->angle) == false)
-	{
-		free(cone);
-		return (NULL);
-	}
+		return (nfree(cone));
+	if (!read_super(toml, &cone->super) || !read_digit(angle, &cone->angle))
+		return (nfree(cone));
 	if ((revolution = table_get(toml, "revolution")))
 	{
 		if (revolution->type != TOML_BOOLEAN)
-		{
-			free(cone);
-			return (NULL);
-		}
+			return (nfree(cone));
 		cone->revolution = revolution->value.boolean_v;
 	}
 	else
@@ -61,17 +65,11 @@ static t_cylinder	*read_cylinder(t_toml_table *toml)
 	if (!(cylinder = malloc(sizeof(t_cylinder))))
 		return (NULL);
 	if (!(radius = table_get(toml, "radius")))
-		return (NULL);
+		return (nfree(cylinder));
 	if (!read_super(toml, &cylinder->super))
-	{
-		free(cylinder);
-		return (NULL);
-	}
+		return (nfree(cylinder));
 	if (read_digit(radius, &cylinder->r) == false)
-	{
-		free(cylinder);
-		return (NULL);
-	}
+		return (nfree(cylinder));
 	cylinder->super.type = TYPE_CYLINDER;
 	return (cylinder);
 }
@@ -84,17 +82,11 @@ static t_sphere		*read_sphere(t_toml_table *toml)
 	if (!(sphere = malloc(sizeof(t_sphere))))
 		return (NULL);
 	if (!(radius = table_get(toml, "radius")))
-		return (NULL);
+		return (nfree(sphere));
 	if (!read_super(toml, &sphere->super))
-	{
-		free(sphere);
-		return (NULL);
-	}
+		return (nfree(sphere));
 	if (read_digit(radius, &sphere->r) == false)
-	{
-		free(sphere);
-		return (NULL);
-	}
+		return (nfree(sphere));
 	sphere->super.type = TYPE_SPHERE;
 	return (sphere);
 }

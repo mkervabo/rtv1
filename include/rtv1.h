@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 17:11:32 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/21 10:21:10 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/21 15:38:31 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdbool.h>
 # include <SDL.h>
 
+# define SHADOW_BIAS 1e-4
 
 typedef struct	s_polynome
 {
@@ -108,7 +109,7 @@ typedef struct	s_cone
 	t_object	super;
 	double		angle;
 	bool		revolution;
-}				t_cone;
+}					t_cone;
 
 typedef struct	s_cam
 {
@@ -118,11 +119,22 @@ typedef struct	s_cam
 
 typedef struct	s_win
 {
-	int			width;
-	int			height;
-	char		*name;
+	size_t			width;
+	size_t			height;
+	char			*name;
+	SDL_Window		*win;
+	SDL_Renderer	*renderer;
+	SDL_Texture		*screen;
+	bool			quit;
 }				t_win;
 
+typedef struct	s_scene
+{
+	t_object	**objects;
+	size_t		objects_size;
+	t_light		**lights;
+	size_t		lights_size;
+}				t_scene;
 
 int			ft_strcmp(const char *s1, const char *s2);
 
@@ -153,6 +165,7 @@ double		vec3_length(t_vec3 v);
 t_vec3		vec3_rotate(t_vec3 v, t_vec3 rot);
 
 t_color		 color_add(t_color a, t_color b);
+uint8_t		clamp_rgb(double value);
 
 t_hit_info	in_sphere(t_sphere *sphere, t_ray *ray);
 t_hit_info	in_cylinder(t_cylinder *cylinder, t_ray *ray);
@@ -164,5 +177,5 @@ double		receive_light(t_light *light, t_vec3 p, t_object *objects[], size_t size
 t_color		 diffuse(t_color object, t_light *light, t_vec3 n, t_vec3 p);
 t_color		specular(t_color object, t_light *light, t_hit_info hit, t_ray *ray);
 t_color		phong(t_color object, t_light *light, t_hit_info hit, t_ray *ray);
-bool		apply_light(t_color *color_light, t_ray *ray, t_who t, t_vec3 p, t_object *objects[], size_t objects_size, t_light *lights[], size_t lights_size);
+bool		apply_light(t_color *clr_light, t_ray *ray, t_who t, t_scene *s);
 #endif

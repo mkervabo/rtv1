@@ -6,15 +6,17 @@
 #    By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/19 11:46:19 by mkervabo          #+#    #+#              #
-#    Updated: 2019/05/12 14:52:12 by mkervabo         ###   ########.fr        #
+#    Updated: 2019/05/21 10:40:52 by mkervabo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = RTv1
 CC = gcc
-CFLAGS = -Wall -Wextra -I ./include -g $(shell pkg-config --cflags SDL2) #-fsanitize=address
+CFLAGS = -Wall -Wextra -I./include -I./libtoml/include $(shell pkg-config --cflags SDL2) -flto -O2 #-fsanitize=address
 
-OBJS = build/main.o build/object.o build/vec3.o build/light.o build/scene.o build/camera.o build/color.o build/rotate.o build/apply_light.o
+include src.mk
+
+OBJS=$(patsubst src/%.c,build/%.o,$(SRCS))
 
 all: $(NAME)
 
@@ -23,7 +25,8 @@ build/%.o: src/%.c include/rtv1.h Makefile
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(shell pkg-config --libs SDL2) $(OBJS) -o $(NAME)
+	$(MAKE) -C libtoml libtoml.a
+	$(CC) $(CFLAGS) $(shell pkg-config --libs SDL2) $(OBJS) libtoml/libtoml.a -o $(NAME)
 
 clean:
 	rm -rf build

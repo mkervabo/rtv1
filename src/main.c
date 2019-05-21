@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 15:39:35 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/21 10:34:18 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/21 15:42:01 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,108 +14,142 @@
 #include "toml.h"
 #include <fcntl.h>
 
-#define SHADOW_BIAS 1e-4
-uint8_t	clamp_rgb(double value);
-
-void ft_exit(SDL_Renderer* renderer, SDL_Window *win)
-{
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(win);
-	SDL_Quit();
-	exit(0);
-}
-
-void new_win(SDL_Renderer** renderer, SDL_Window **win, t_win *window)
+bool	init_window(t_win *window)
 {
 	SDL_Init(SDL_INIT_VIDEO);
-	if (!(*win = SDL_CreateWindow(window->name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window->width , window->height, SDL_WINDOW_OPENGL))
-	|| !(*renderer = SDL_CreateRenderer(*win, -1, SDL_RENDERER_ACCELERATED)))
+	if (!(window->win = SDL_CreateWindow(window->name, SDL_WINDOWPOS_UNDEFINED,
+			SDL_WINDOWPOS_UNDEFINED, window->width, window->height,
+			SDL_WINDOW_OPENGL))
+		|| !(window->renderer = SDL_CreateRenderer(window->win, -1, SDL_RENDERER_ACCELERATED))
+		|| !(window->screen = SDL_CreateTexture(window->renderer,
+			SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
+			window->width, window->height)))
 	{
         printf("Could not create window: %s\n", SDL_GetError());
-		ft_exit (*renderer, *win);
-    }
+		return (false);
+	}
+	return (true);
 }
 
-void	render(t_object *objects[], size_t objects_size, t_light *lights[], size_t lights_size, t_cam camera, t_win *window)
+void	destroy_window(t_win *window)
 {
-	SDL_Window		*win;
-	SDL_Renderer	*renderer;
-	SDL_Event		event;
-	int				quit;
+	if (window->screen)
+		SDL_DestroyTexture(window->screen);
+	if (window->renderer)
+		SDL_DestroyRenderer(window->renderer);
+	if (window->win)
+		SDL_DestroyWindow(window->win);
+	SDL_Quit();
+}
 
-	t_ray 	ray;
+uint32_t	to_rgb(uint8_t r, uint8_t g, uint8_t b)
+{
+	return (((uint32_t)r) << 16 | ((uint32_t)g) << 8 | b);
+}
 
-	win = NULL;
-	renderer = NULL;
-	new_win(&renderer, &win, window);
+static void	hit_neg(uint32_t *pixel, t_ray *ray, t_scene *scene,
+	t_who t)
+{
+	t_color color_light;
+	bool	mod;
 
-	int x;
-	int y;
+	color_light = (t_color) {
+		0, 0, 0
+	};
+	mod = apply_light(&color_light, ray, t, scene);
+	*pixel = 
+		to_rgb(mod ? clamp_rgb(scene->objects[t.i]->color.r - color_light.r) : 0,
+		mod ? clamp_rgb(scene->objects[t.i]->color.g - color_light.g) : 0,
+		mod ? clamp_rgb(scene->objects[t.i]->color.b - color_light.b) : 0);
+}
 
+void	*ft_memset(void *s, int c, size_t n)
+{
+	while (n--)
+		((unsigned char *)s)[n] = c;
+	return (s);
+}
+
+void		poll_events(t_win *window)
+{
+	SDL_Event	event;
+	
+	while (SDL_PollEvent(&event))
+	{
+		if (event.type == SDL_QUIT)
+			window->quit = true;
+		if (event.type == SDL_KEYDOWN)
+			window->quit = true;
+	}
+}
+
+static void	raytrace(t_scene *scene, t_cam camera, t_win *window)
+{
+	size_t		x;
+	size_t		y;
+	t_ray		ray;
+	t_who		t;
+	uint32_t	*pixels;
+
+	pixels = malloc(sizeof(uint32_t) * window->width * window->height);
+	ft_memset(pixels, 0, sizeof(uint32_t) * window->width * window->height);
 	y = 0;
-	while (y < window->height)
+	while (y < window->height && !window->quit)
 	{
 		x = 0;
-		while(x < window->width) {
-			ray = camera_create_ray(&camera, x, y, window);
-			t_who t = in_objects(&ray, objects, objects_size);
-
+		while (x < window->width)
+		{
+			ray = camera_create_ray(&camera, x, window->height - y - 1, window);
+			t = in_objects(&ray, scene->objects, scene->objects_size);
 			if (t.hit.t >= 0)
-			{
-				t_vec3 p = vec3_add(vec3_add(ray.origin, vec3_multv(ray.direction, t.hit.t)), vec3_multv(t.hit.n, SHADOW_BIAS));
-				t_color color_light = { 0, 0, 0};
-				bool mod = apply_light(&color_light, &ray, t, p, objects, objects_size, lights, lights_size);
-				SDL_SetRenderDrawColor(renderer,
-							mod ? clamp_rgb(objects[t.i]->color.r -  color_light.r) : 0,
-							mod ? clamp_rgb(objects[t.i]->color.g -  color_light.g) : 0,
-							mod ? clamp_rgb(objects[t.i]->color.b -  color_light.b) : 0,
-							255
-						);
-			}
+				hit_neg(pixels + y * window->width + x, &ray, scene, t);
 			else
-				SDL_SetRenderDrawColor(renderer, 211, 211, 211, 255);	
-			SDL_RenderDrawPoint(renderer, x, window->height - y - 1);
+				pixels[y * window->width + x] = 0;
 			x++;
 		}
+		poll_events(window);
+		SDL_UpdateTexture(window->screen, NULL, pixels,
+			window->width * sizeof(uint32_t));
+		SDL_RenderCopy(window->renderer, window->screen, NULL, NULL);
+		SDL_RenderPresent(window->renderer);
 		y++;
 	}
-	SDL_RenderPresent(renderer);
-
-	quit = 0;
-	while (!quit)
-	{
-		while (SDL_PollEvent(&event)){
-			if (event.type == SDL_QUIT)
-				quit = 1;
-			if (event.type == SDL_KEYDOWN)
-				quit = 1;
-		}
-	}
-	ft_exit(renderer, win);
+	free(pixels);
 }
 
-bool	render_scene(t_toml_table *toml) {
-	t_object 		**objects;
-	size_t			objects_size;
-	t_light 		**lights;
-	size_t 			lights_size;
+void		render(t_scene *scene, t_cam camera, t_win *window)
+{
+	if (init_window(window))
+	{
+		raytrace(scene, camera, window);
+		while (!window->quit)
+			poll_events(window);
+	}
+	destroy_window(window);
+}
+
+bool	render_scene(t_toml_table *toml)
+{
+	t_scene			scene;
 	t_cam			camera;
 	t_win			window;
 
-	if (!(objects = read_objects(toml, &objects_size)))
+	ft_memset(&window, 0, sizeof(t_win));
+	if (!(scene.objects = read_objects(toml, &scene.objects_size)))
 		return (false);
-	if (!(lights = read_lights(toml, &lights_size)))
+	if (!(scene.lights = read_lights(toml, &scene.lights_size)))
 		return (false);
 	if (!read_camera(toml, &camera))
 		return (false);
 	if (!read_window(toml, &window))
 		return (false);
-	render(objects, objects_size, lights, lights_size, camera, &window);
+	render(&scene, camera, &window);
 	return (true);
 }
 
-int main(int argc, char *argv[]) {
-	t_reader 		r;
+int		main(int argc, char *argv[])
+{
+	t_reader		r;
 	t_toml_table	*toml;
 	int				fd;
 	t_toml_error	err;
