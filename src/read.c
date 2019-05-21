@@ -6,24 +6,47 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 15:39:51 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/15 17:05:47 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/21 10:44:24 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "toml.h"
 
-bool				read_digit(t_toml toml, double *digit)
+bool				read_window(t_toml_table *toml, t_win *win)
 {
-if (radius->type == TOML_FLOAT)
-		*digit = toml->value.float_v;
-	else if (radius->type == TOML_INTEGER)
-		*digit = toml->value.integer_v;
-	else
-		return (false)
+	t_toml	*value;
+	double	width;
+	double	height;
+
+	if(!(value = table_get(toml, "width")))
+		return (false);
+	if (!read_digit(value, &width))
+		return (false);
+	win->width = width;
+	if(!(value = table_get(toml, "height")))
+		return (false);
+	if (!read_digit(value, &height))
+		return (false);
+	win->height = height;
+	if (!(read_toml_type(toml, &value, "name", TOML_STRING)))
+		return (false);
+	win->name = value->value.string_v;
+	return (true);
 }
 
-static int			ft_strcmp(const char *s1, const char *s2)
+bool				read_digit(t_toml *toml, double *digit)
+{
+	if (toml->type == TOML_FLOAT)
+		*digit = toml->value.float_v;
+	else if (toml->type == TOML_INTEGER)
+		*digit = toml->value.integer_v;
+	else
+		return (false);
+	return (true);
+}
+
+int			ft_strcmp(const char *s1, const char *s2)
 {
 	size_t i;
 
@@ -33,7 +56,7 @@ static int			ft_strcmp(const char *s1, const char *s2)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-static t_light		**read_lights(t_toml_table *toml)
+t_light		**read_lights(t_toml_table *toml, size_t *size)
 {
 	t_light		**lights;
 	t_toml			*v;
@@ -45,18 +68,20 @@ static t_light		**read_lights(t_toml_table *toml)
 	if (v->value.array_v->len == 0
 		|| v->value.array_v->inner[0].type != TOML_TABLE)
 		return (NULL);
-	if (!(lights = malloc(sizeof(t_light*) * v->value.array_v->len)))
+	*size = v->value.array_v->len;
+	if (!(lights = malloc(sizeof(t_light*) * *size)))
 		return (NULL);
 	i = 0;
-	while (i < v->value.array_v->len)
+	while (i < *size)
 	{
-		lights[i] = read_light(v->value.array_v->inner[i].value.table_v)
+		if (!(lights[i] = read_light(v->value.array_v->inner[i].value.table_v)))
+			return (NULL);
 		i++;
 	}
-	return(lights)
+	return (lights);
 }
 
-static t_object		**read_objects(t_toml_table *toml)
+t_object		**read_objects(t_toml_table *toml, size_t *size)
 {
 	t_object		**objects;
 	t_toml			*v;
@@ -67,63 +92,34 @@ static t_object		**read_objects(t_toml_table *toml)
 	if (v->value.array_v->len == 0
 		|| v->value.array_v->inner[0].type != TOML_TABLE)
 		return (NULL);
-	if (!(objects = malloc(sizeof(t_object*) * v->value.array_v->len)))
+	*size = v->value.array_v->len;
+	if (!(objects = malloc(sizeof(t_object*) * *size)))
 		return (NULL);
 	i = 0;
-	while (i < v->value.array_v->len)
+	while (i < *size)
 	{
-		objects[i] = read_object(v->value.array_v->inner[i].value.table_v)
+		if (!(objects[i] = read_object(v->value.array_v->inner[i].value.table_v)))
+			return (NULL);
 		i++;
 	}
-	return(objects)
+	return (objects);
 }
 
-t_vec3			read_camera(t_toml_table *toml)
+bool			read_camera(t_toml_table *toml, t_cam *cam)
 {
 	t_toml	*camera;
 	t_toml	*value;
-	t_vec3	pos;
-	/*t_cam cam;*/
 
-	if (read_toml_type(toml, &camera, "objects", TOML_TABLE) == false)
-		return (NULL);
-	if (read_toml_type(camera, &value, "position", TOML_TABLE) == false)
-		return (NULL);
-	if (!(pos = read_t_vec3(value)))
-		return (NULL);
-	/*
-	if (!(camera.pos = read_t_vec3(value)))
-		return (NULL);
-	if (read_toml_type(camera, &value, "rotation", TOML_TABLE) == false)
-		return (NULL);
-	if (!(cam.rot = read_t_vec3(value)))
-		return (NULL);
-	return (cam);
-	*/
-	return (pos);¸
-
-}
-
-bool	read_file(char *file, t_object ***object, t_light ***light, t_vec3 *camera)
-{
-	int				fd;
-	t_toml_error	err;
-	t_reader 		r;
-	t_toml_table	*toml
-
-	fd = open(file, O_RDONLY);
-	r = create_reader(fd, buffer, sizeof(buffer));
-	close(fd);
-	if ((err = read_toml(&r, &toml, true)) != NO_ERROR)
-	{
-		printf("Error<%zu:%zu>: %d\n", r.line, r.column, err);
-		return false
-	}
-	if (!(*object = read_objects(toml)))
+	if (!read_toml_type(toml, &camera, "camera", TOML_TABLE))
 		return (false);
-	if (!(*light = read_lights(toml)))
+	if (!read_toml_type(camera->value.table_v, &value, "position", TOML_TABLE))
 		return (false);
-	if (!(*camera = read_camera(toml)))
+	if (!read_t_vec3(value->value.table_v, &cam->pos))
 		return (false);
+	if (!read_toml_type(camera->value.table_v, &value, "rotation", TOML_TABLE))
+		return (false);
+	if (!read_t_vec3(value->value.table_v, &cam->rot))
+		return (false);
+	cam->rot = vec3_multv(cam->rot, M_PI / 180);
 	return (true);
 }

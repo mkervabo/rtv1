@@ -1,112 +1,125 @@
-#include "rtv1.c"
-#include "toml.c"
+#include "rtv1.h"
+#include "toml.h"
 
-static t_color			read_color(t_toml_table *toml)
+static bool			read_color(t_toml_table *toml, t_color *color)
 {
-	t_color	color;
 	t_toml	*value;
 
 	if (!(value = table_get(toml, "r")))
-		color.r = 0;
+		color->r = 0;
 	if (value->type != TOML_INTEGER)
-			return (NULL);
-	color.r = value->value;
+		return (false);
+	color->r = value->value.integer_v;
 	if (!(value = table_get(toml, "g")))
-		color.g = 0;
+		color->g = 0;
 	if (value->type != TOML_INTEGER)
-			return (NULL);
-	color.g = value->value;
+		return (false);
+	color->g = value->value.integer_v;
 	if (!(value = table_get(toml, "b")))
-		color.r = 0;
+		color->r = 0;
 	if (value->type != TOML_INTEGER)
-			return (NULL);
-	color.b = value->value;
-	return (color);
+		return (false);
+	color->b = value->value.integer_v;
+	return (true);
 }
 
-t_vec3				read_t_vec3(t_toml_table *toml)
+bool				read_t_vec3(t_toml_table *toml, t_vec3 *vec)
 {
-	t_vec3	vec;
 	t_toml	*value;
 
 	if (!(value = table_get(toml, "x")))
-		vec.x = 0;
-	if (read_digit(value, &vec.x) == false)
-		return (NULL);
+		vec->x = 0;
+	if (read_digit(value, &vec->x) == false)
+		return (false);
 	if (!(value = table_get(toml, "y")))
-		vec.y = 0;
-	if (read_digit(value, &vec.y) == false)
-		return (NULL);
+		vec->y = 0;
+	if (read_digit(value, &vec->y) == false)
+		return (false);
 	if (!(value = table_get(toml, "z")))
-		vec.x = 0;
-	if (read_digit(value, &vec.z) == false)
-		return (NULL);
-	return (vec);
+		vec->x = 0;
+	if (read_digit(value, &vec->z) == false)
+		return (false);
+	return (true);
 }
 
-static	e_light_type	read_light_type(char *light)
+static bool	read_light_type(char *light, enum e_light_type *type)
 {
-	if (light == "DIFFUSE")
-		return (LIGHT_DIFFUSE);
-	if (light == "PHONG")
-		return(LIGHT_PHONG);
-	return (NULL);
+	if (ft_strcmp(light, "DIFFUSE") == 0)
+		*type = LIGHT_DIFFUSE;
+	else if (ft_strcmp(light, "PHONG") == 0)
+		*type = LIGHT_PHONG;
+	else
+		return (false);
+	return (true);
 }
 
-bool					read_toml_type(t_toml_table *toml, t_toml **value, char *name, e_toml_type type)
+bool					read_toml_type(t_toml_table *toml, t_toml **value, char *name, enum e_toml_type type)
 {
 	if (!(*value = table_get(toml, name)))
 		return (false);
-	if (*value->type != type)
+	if ((*value)->type != type)
 		return (false);
-	return (true)
+	return (true);
 }
 
 t_light				*read_light(t_toml_table *toml)
 {
 	t_toml	*type;
 	t_light	*light;
+	double	expose;
 
-	if (!(light = malloc(sizeof(t_light*))))
+	if (!(light = malloc(sizeof(t_light))))
 		return (NULL);
 	if (read_toml_type(toml, &type, "position", TOML_TABLE) == false)
 		return (NULL);
-	if (!(light->pos = read_t_vec3(toml->table_v)))
+	if (!read_t_vec3(type->value.table_v, &light->pos))
 		return (NULL);
 	if (read_toml_type(toml, &type, "color", TOML_TABLE) == false)
 		return (NULL);
-	if (!(light->color = read_color(toml->table_v)))
+	if (!read_color(type->value.table_v, &light->color))
 		return (NULL);
-	if (!(type = table_get(toml, toml, "intensity")))
+	if (!(type = table_get(toml, "intensity")))
 		return (NULL);
-	if (read_digit(value, &light->intensity) == false)
+	if (read_digit(type, &light->intensity) == false)
 		return (NULL);
 	if (!(type = table_get(toml, "expose")))
 		return (NULL);
-	if (read_digit(value, &light->expose) == false)
+	if (read_digit(type, &expose) == false)
 		return (NULL);
-	return (light)
+	light->expose = expose;
+	return (light);
 }
 
-t_object				read_super(t_toml_table *toml)
+bool				read_super(t_toml_table *toml, t_object *object)
 {
 	t_toml		*value;
-	t_object	object;
 
-	if (read_toml_type(toml, &value, "position", TOML_TABLE) == false)
-		return (NULL);
-	if (!(object->pos = read_t_vec3(toml->table_v)))
-		return (NULL);
-	if (read_toml_type(toml, &value, "rotation", TOML_TABLE) == false)
-		return (NULL);
-	if (!(object->rot = read_t_vec3(toml->table_v)))
-		return (NULL);
+	if (read_toml_type(toml, &value, "position", TOML_TABLE))
+	{
+		if (!read_t_vec3(value->value.table_v, &object->pos))
+			return (false);
+	}
+	else
+		object->pos = (t_vec3) {
+			0, 0, 0
+		};
+	if (read_toml_type(toml, &value, "rotation", TOML_TABLE))
+	{
+		if (!read_t_vec3(value->value.table_v, &object->rot))
+			return (false);
+		object->rot = vec3_multv(object->rot, M_PI / 180);
+	}
+	else
+		object->rot = (t_vec3) {
+			0, 0, 0
+		};
 	if (read_toml_type(toml, &value, "color", TOML_TABLE) == false)
-		return (NULL);
-	if (!(object->color = read_color(toml->table_v)))
-		return (NULL);
+		return (false);
+	if (!read_color(value->value.table_v, &object->color))
+		return (false);
 	if (read_toml_type(toml, &value, "light", TOML_STRING) == false)
-		return (NULL);
-	if (!(object.light = read_light_type(value->string_v))
-	return (object);
+		return (false);
+	if (!read_light_type(value->value.string_v, &object->light))
+		return (false);
+	return (true);
 }

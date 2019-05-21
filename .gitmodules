@@ -1,0 +1,3 @@
+[submodule "libtoml"]
+	path = libtoml
+	url = https://github.com/mkervabo/toml.git

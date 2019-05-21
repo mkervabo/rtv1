@@ -6,19 +6,18 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 17:11:32 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/15 16:58:56 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/21 10:21:10 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RTV1_H
 # define RTV1_H
 
+# include <toml.h>
 # include <stdlib.h>
 # include <stdbool.h>
 # include <SDL.h>
 
-# define SCREEN_X 1600
-# define SCREEN_Y 880
 
 typedef struct	s_polynome
 {
@@ -108,6 +107,7 @@ typedef struct	s_cone
 {
 	t_object	super;
 	double		angle;
+	bool		revolution;
 }				t_cone;
 
 typedef struct	s_cam
@@ -116,17 +116,30 @@ typedef struct	s_cam
 	t_vec3		rot;
 }				t_cam;
 
+typedef struct	s_win
+{
+	int			width;
+	int			height;
+	char		*name;
+}				t_win;
 
-void		read_file(char *file);
 
-bool		read_digit(t_toml toml, double *digit);
-bool		read_toml_type(t_toml **value, char *name, e_toml_type type);
+int			ft_strcmp(const char *s1, const char *s2);
 
-t_vec3		read_t_vec3(t_toml_table *toml);
+bool		read_window(t_toml_table *toml, t_win *win);
+
+t_object	**read_objects(t_toml_table *toml, size_t *size);
+t_light		**read_lights(t_toml_table *toml, size_t *size);
+bool		read_camera(t_toml_table *toml, t_cam *camera);
+
+bool		read_digit(t_toml *toml, double *digit);
+bool		read_toml_type(t_toml_table *toml, t_toml **value, char *name, enum e_toml_type type);
+
+bool		read_t_vec3(t_toml_table *toml, t_vec3 *vec);
 t_object	*read_object(t_toml_table *toml);
-t_object	read_super(t_toml_table *toml);
+bool		read_super(t_toml_table *toml, t_object *object);
 t_light		*read_light(t_toml_table *toml);
-t_ray		camera_create_ray(t_vec3 camera, int x, int y);
+t_ray		camera_create_ray(t_cam *camera, int x, int y, t_win *window);
 
 t_vec3		vec3_multv(t_vec3 a, double v);
 t_vec3		vec3_unit(t_vec3 v);
@@ -151,11 +164,5 @@ double		receive_light(t_light *light, t_vec3 p, t_object *objects[], size_t size
 t_color		 diffuse(t_color object, t_light *light, t_vec3 n, t_vec3 p);
 t_color		specular(t_color object, t_light *light, t_hit_info hit, t_ray *ray);
 t_color		phong(t_color object, t_light *light, t_hit_info hit, t_ray *ray);
-bool		apply_light(t_color *color_light, t_ray *ray, t_who t, t_vec3 p);
-
-extern t_object *objects[];
-extern size_t objects_size;
-extern t_light *lights[];
-extern size_t lights_size;
-
+bool		apply_light(t_color *color_light, t_ray *ray, t_who t, t_vec3 p, t_object *objects[], size_t objects_size, t_light *lights[], size_t lights_size);
 #endif
