@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 11:51:30 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/21 13:19:10 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 11:44:26 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ bool		apply_light(t_color *clr_light, t_ray *r, t_who t, t_scene *s)
 					s->objects, s->objects_size)) >= 0)
 		{
 			if (s->objects[t.i]->light == LIGHT_PHONG)
-				clr = phong(s->objects[t.i]->color, s->lights[i], t.hit, r);
+				clr = phong(s->lights[i], t.hit, r);
 			if (s->objects[t.i]->light == LIGHT_DIFFUSE)
-				clr = diffuse(s->objects[t.i]->color, s->lights[i], t.hit.n, p);
+				clr = diffuse(s->lights[i], t.hit.n, p);
 			if (s->objects[t.i]->light == LIGHT_SPECULAR)
-				clr = specular(s->objects[t.i]->color, s->lights[i], t.hit, r);
+				clr = specular(s->lights[i], t.hit, r);
 			*clr_light = color_add(*clr_light, clr);
 			mod = true;
 		}

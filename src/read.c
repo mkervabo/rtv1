@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 15:39:51 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/21 14:27:20 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 11:11:34 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,27 +33,6 @@ bool		read_window(t_toml_table *toml, t_win *win)
 		return (false);
 	win->name = value->value.string_v;
 	return (true);
-}
-
-bool		read_digit(t_toml *toml, double *digit)
-{
-	if (toml->type == TOML_FLOAT)
-		*digit = toml->value.float_v;
-	else if (toml->type == TOML_INTEGER)
-		*digit = toml->value.integer_v;
-	else
-		return (false);
-	return (true);
-}
-
-int			ft_strcmp(const char *s1, const char *s2)
-{
-	size_t i;
-
-	i = 0;
-	while (s1[i] == s2[i] && s1[i] && s2[i])
-		i++;
-	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
 t_light		**read_lights(t_toml_table *toml, size_t *size)

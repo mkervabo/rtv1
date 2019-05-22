@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/26 15:37:58 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/21 13:22:10 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 11:42:05 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,16 +35,7 @@ double		receive_light(t_light *light, t_vec3 p, t_object *objects[],
 		return (dist);
 }
 
-uint8_t		clamp_rgb(double value)
-{
-	if (value < 0)
-		return (0);
-	if (value > 255)
-		return (255);
-	return (value);
-}
-
-t_color		diffuse(t_color object, t_light *light, t_vec3 n, t_vec3 p)
+t_color		diffuse(t_light *light, t_vec3 n, t_vec3 p)
 {
 	t_color	color;
 	t_vec3	n_light;
@@ -58,7 +49,7 @@ t_color		diffuse(t_color object, t_light *light, t_vec3 n, t_vec3 p)
 	return (color);
 }
 
-t_color		specular(t_color object, t_light *light, t_hit_info hit, t_ray *ray)
+t_color		specular(t_light *light, t_hit_info hit, t_ray *ray)
 {
 	t_color	color;
 	t_vec3	n_light;
@@ -81,7 +72,7 @@ t_color		specular(t_color object, t_light *light, t_hit_info hit, t_ray *ray)
 	return (color);
 }
 
-t_color		phong(t_color object, t_light *light, t_hit_info hit, t_ray *ray)
+t_color		phong(t_light *light, t_hit_info hit, t_ray *ray)
 {
 	t_color	color;
 	t_vec3	p;

@@ -6,34 +6,12 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 14:16:01 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/21 14:21:47 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 11:48:27 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "toml.h"
-
-static bool	read_color(t_toml_table *toml, t_color *color)
-{
-	t_toml	*value;
-
-	if (!(value = table_get(toml, "r")))
-		color->r = 0;
-	if (value->type != TOML_INTEGER)
-		return (false);
-	color->r = value->value.integer_v;
-	if (!(value = table_get(toml, "g")))
-		color->g = 0;
-	if (value->type != TOML_INTEGER)
-		return (false);
-	color->g = value->value.integer_v;
-	if (!(value = table_get(toml, "b")))
-		color->r = 0;
-	if (value->type != TOML_INTEGER)
-		return (false);
-	color->b = value->value.integer_v;
-	return (true);
-}
 
 bool		read_t_vec3(t_toml_table *toml, t_vec3 *vec)
 {
@@ -52,55 +30,6 @@ bool		read_t_vec3(t_toml_table *toml, t_vec3 *vec)
 	if (read_digit(value, &vec->z) == false)
 		return (false);
 	return (true);
-}
-
-static bool	read_light_type(char *light, enum e_light_type *type)
-{
-	if (ft_strcmp(light, "DIFFUSE") == 0)
-		*type = LIGHT_DIFFUSE;
-	else if (ft_strcmp(light, "PHONG") == 0)
-		*type = LIGHT_PHONG;
-	else
-		return (false);
-	return (true);
-}
-
-bool		read_toml_type(t_toml_table *toml, t_toml **value, char *name,
-	enum e_toml_type type)
-{
-	if (!(*value = table_get(toml, name)))
-		return (false);
-	if ((*value)->type != type)
-		return (false);
-	return (true);
-}
-
-t_light		*read_light(t_toml_table *toml)
-{
-	t_toml	*type;
-	t_light	*light;
-	double	expose;
-
-	if (!(light = malloc(sizeof(t_light))))
-		return (NULL);
-	if (read_toml_type(toml, &type, "position", TOML_TABLE) == false)
-		return (NULL);
-	if (!read_t_vec3(type->value.table_v, &light->pos))
-		return (NULL);
-	if (read_toml_type(toml, &type, "color", TOML_TABLE) == false)
-		return (NULL);
-	if (!read_color(type->value.table_v, &light->color))
-		return (NULL);
-	if (!(type = table_get(toml, "intensity")))
-		return (NULL);
-	if (read_digit(type, &light->intensity) == false)
-		return (NULL);
-	if (!(type = table_get(toml, "expose")))
-		return (NULL);
-	if (read_digit(type, &expose) == false)
-		return (NULL);
-	light->expose = expose;
-	return (light);
 }
 
 static bool	read_super_p_r(t_toml_table *toml, t_object *object)

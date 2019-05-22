@@ -6,18 +6,12 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 14:05:01 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/21 14:54:13 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 11:16:28 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "toml.h"
-
-void				*nfree(void *ptr)
-{
-	free(ptr);
-	return (NULL);
-}
 
 static t_object		*read_plane(t_toml_table *toml)
 {
