@@ -44,9 +44,11 @@ bool	init_window(t_win *window)
 			SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
 			window->width, window->height)))
 	{
+		free(window->name);
 		printf("Could not create window: %s\n", SDL_GetError());
 		return (false);
 	}
+	free(window->name);
 	return (true);
 }
 

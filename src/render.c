@@ -71,8 +71,8 @@ static void	render(t_scene *scene, t_cam camera, t_win *window)
 	if (init_window(window))
 	{
 		raytrace(scene, camera, window);
-		while (!window->quit)
-			poll_events(window);
+		//while (!window->quit)
+		//	poll_events(window);
 	}
 	destroy_window(window);
 }
@@ -84,14 +84,33 @@ bool		render_scene(t_toml_table *toml)
 	t_win			window;
 
 	ft_memset(&window, 0, sizeof(t_win));
+	ft_memset(&scene, 0, sizeof(t_scene));
 	if (!(scene.objects = read_objects(toml, &scene.objects_size)))
+	{
+		free_scene(&scene);
+		free_toml_table(toml);
 		return (false);
+	}
 	if (!(scene.lights = read_lights(toml, &scene.lights_size)))
+	{
+		free_scene(&scene);
+		free_toml_table(toml);
 		return (false);
+	}
 	if (!read_camera(toml, &camera))
+	{
+		free_scene(&scene);
+		free_toml_table(toml);
 		return (false);
+	}
 	if (!read_window(toml, &window))
+	{
+		free_scene(&scene);
+		free_toml_table(toml);
 		return (false);
+	}
+	free_toml_table(toml);
 	render(&scene, camera, &window);
+	free_scene(&scene);
 	return (true);
 }

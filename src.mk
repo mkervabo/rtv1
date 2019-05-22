@@ -15,3 +15,4 @@ SRCS += src/vec3_v.c
 SRCS += src/rgb.c
 SRCS += src/render.c
 SRCS += src/window.c
+SRCS += src/free.c

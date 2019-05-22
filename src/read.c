@@ -32,6 +32,7 @@ bool		read_window(t_toml_table *toml, t_win *win)
 	if (!(read_toml_type(toml, &value, "name", TOML_String)))
 		return (false);
 	win->name = value->value.string_v;
+	value->value.string_v = NULL;
 	return (true);
 }
 

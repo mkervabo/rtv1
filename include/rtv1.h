@@ -195,5 +195,6 @@ t_color			specular(t_light *light, t_hit_info hit, t_ray *ray);
 t_color			phong(t_light *light, t_hit_info hit, t_ray *ray);
 bool			apply_light(t_color *clr_light, t_ray *ray, t_who t,
 				t_scene *s);
+void			free_scene(t_scene *scene);
 
 #endif
