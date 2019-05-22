@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/22 11:45:29 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 11:06:15 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 13:31:22 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,13 @@ float		solve_quadratic_min(t_polynome poly)
 
 static void	object_type(t_object *object, t_ray *ray, t_hit_info *hit)
 {
-	if (object->type == TYPE_SPHERE)
+	if (object->type == type_sphere)
 		*hit = in_sphere((t_sphere *)object, ray);
-	if (object->type == TYPE_CYLINDER)
+	if (object->type == type_cylinder)
 		*hit = in_cylinder((t_cylinder *)object, ray);
-	if (object->type == TYPE_CONE)
+	if (object->type == type_cone)
 		*hit = in_cone((t_cone *)object, ray);
-	if (object->type == TYPE_PLANE)
+	if (object->type == type_plane)
 		*hit = in_plane(ray);
 }
 

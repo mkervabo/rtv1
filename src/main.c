@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 15:39:35 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 12:07:49 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 13:23:56 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int		main(int argc, char *argv[])
 		return (1);
 	}
 	r = create_reader(fd, buffer, sizeof(buffer));
-	if ((err = read_toml(&r, &toml, true)) != NO_ERROR)
+	if ((err = read_toml(&r, &toml, true)) != no_error)
 	{
 		printf("Error<%zu:%zu>: %d\n", r.line, r.column, err);
 		return (1);

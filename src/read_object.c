@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 14:05:01 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 11:16:28 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 13:33:11 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static t_object		*read_plane(t_toml_table *toml)
 		return (NULL);
 	if (!read_super(toml, plane))
 		return (nfree(plane));
-	plane->type = TYPE_PLANE;
+	plane->type = type_plane;
 	return (plane);
 }
 
@@ -40,14 +40,14 @@ static t_cone		*read_cone(t_toml_table *toml)
 		return (nfree(cone));
 	if ((revolution = table_get(toml, "revolution")))
 	{
-		if (revolution->type != TOML_BOOLEAN)
+		if (revolution->type != TOML_boolean)
 			return (nfree(cone));
 		cone->revolution = revolution->value.boolean_v;
 	}
 	else
 		cone->revolution = true;
 	cone->angle *= M_PI / 180;
-	cone->super.type = TYPE_CONE;
+	cone->super.type = type_cone;
 	return (cone);
 }
 
@@ -64,7 +64,7 @@ static t_cylinder	*read_cylinder(t_toml_table *toml)
 		return (nfree(cylinder));
 	if (read_digit(radius, &cylinder->r) == false)
 		return (nfree(cylinder));
-	cylinder->super.type = TYPE_CYLINDER;
+	cylinder->super.type = type_cylinder;
 	return (cylinder);
 }
 
@@ -81,7 +81,7 @@ static t_sphere		*read_sphere(t_toml_table *toml)
 		return (nfree(sphere));
 	if (read_digit(radius, &sphere->r) == false)
 		return (nfree(sphere));
-	sphere->super.type = TYPE_SPHERE;
+	sphere->super.type = type_sphere;
 	return (sphere);
 }
 
@@ -91,7 +91,7 @@ t_object			*read_object(t_toml_table *toml)
 
 	if (!(type = table_get(toml, "type")))
 		return (NULL);
-	if (type->type != TOML_STRING)
+	if (type->type != TOML_string)
 		return (NULL);
 	if (ft_strcmp(type->value.string_v, "SPHERE") == 0)
 		return ((t_object *)read_sphere(toml));

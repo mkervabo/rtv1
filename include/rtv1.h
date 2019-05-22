@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 17:11:32 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 12:18:47 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 13:28:23 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,17 @@ typedef struct	s_ray
 
 enum			e_object_type
 {
-	TYPE_SPHERE,
-	TYPE_CYLINDER,
-	TYPE_CONE,
-	TYPE_PLANE
+	type_sphere,
+	type_cylinder,
+	type_cone,
+	type_plane
 };
 
 enum			e_light_type
 {
-	LIGHT_DIFFUSE,
-	LIGHT_SPECULAR,
-	LIGHT_PHONG
+	light_diffuse,
+	light_specular,
+	light_phong
 };
 
 typedef struct	s_color

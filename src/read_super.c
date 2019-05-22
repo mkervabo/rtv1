@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 14:16:01 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 11:48:27 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 13:26:05 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static bool	read_super_p_r(t_toml_table *toml, t_object *object)
 {
 	t_toml		*value;
 
-	if (read_toml_type(toml, &value, "position", TOML_TABLE))
+	if (read_toml_type(toml, &value, "position", TOML_table))
 	{
 		if (!read_t_vec3(value->value.table_v, &object->pos))
 			return (false);
@@ -45,7 +45,7 @@ static bool	read_super_p_r(t_toml_table *toml, t_object *object)
 		object->pos = (t_vec3) {
 			0, 0, 0
 		};
-	if (read_toml_type(toml, &value, "rotation", TOML_TABLE))
+	if (read_toml_type(toml, &value, "rotation", TOML_table))
 	{
 		if (!read_t_vec3(value->value.table_v, &object->rot))
 			return (false);
@@ -64,11 +64,11 @@ bool		read_super(t_toml_table *toml, t_object *object)
 
 	if (!read_super_p_r(toml, object))
 		return (false);
-	if (read_toml_type(toml, &value, "color", TOML_TABLE) == false)
+	if (read_toml_type(toml, &value, "color", TOML_table) == false)
 		return (false);
 	if (!read_color(value->value.table_v, &object->color))
 		return (false);
-	if (read_toml_type(toml, &value, "light", TOML_STRING) == false)
+	if (read_toml_type(toml, &value, "light", TOML_string) == false)
 		return (false);
 	if (!read_light_type(value->value.string_v, &object->light))
 		return (false);
