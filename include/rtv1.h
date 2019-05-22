@@ -6,14 +6,14 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 17:11:32 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 13:28:23 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 13:37:09 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RTV1_H
 # define RTV1_H
 
-# include <toml.h>
+# include "toml.h"
 # include <stdlib.h>
 # include <stdbool.h>
 # include <SDL.h>
