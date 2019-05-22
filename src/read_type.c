@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 11:11:55 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 13:25:42 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 14:02:52 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ void	*nfree(void *ptr)
 
 bool	read_digit(t_toml *toml, double *digit)
 {
-	if (toml->type == TOML_float)
+	if (toml->type == TOML_Float)
 		*digit = toml->value.float_v;
-	else if (toml->type == TOML_integer)
+	else if (toml->type == TOML_Integer)
 		*digit = toml->value.integer_v;
 	else
 		return (false);

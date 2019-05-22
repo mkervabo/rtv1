@@ -6,13 +6,13 @@
 #    By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/04/19 11:46:19 by mkervabo          #+#    #+#              #
-#    Updated: 2019/05/21 10:40:52 by mkervabo         ###   ########.fr        #
+#    Updated: 2019/05/22 13:44:03 by mkervabo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = RTv1
 CC = gcc
-CFLAGS = -Wall -Wextra -I./include -I./libtoml/include $(shell pkg-config --cflags SDL2) -flto -O2 #-fsanitize=address
+CFLAGS = -Wall -Wextra -I./include -I./libtoml/include $(shell pkg-config --cflags sdl2) -flto -O2 #-fsanitize=address
 
 include src.mk
 
@@ -26,7 +26,7 @@ build/%.o: src/%.c include/rtv1.h Makefile
 
 $(NAME): $(OBJS)
 	$(MAKE) -C libtoml libtoml.a
-	$(CC) $(CFLAGS) $(shell pkg-config --libs SDL2) $(OBJS) libtoml/libtoml.a -o $(NAME)
+	$(CC) $(CFLAGS) $(shell pkg-config --libs sdl2) -lm $(OBJS) libtoml/libtoml.a -o $(NAME)
 
 clean:
 	rm -rf build

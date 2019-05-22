@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 15:39:51 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 13:33:41 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/22 14:04:44 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ bool		read_window(t_toml_table *toml, t_win *win)
 	if (!read_digit(value, &height))
 		return (false);
 	win->height = height;
-	if (!(read_toml_type(toml, &value, "name", TOML_string)))
+	if (!(read_toml_type(toml, &value, "name", TOML_String)))
 		return (false);
 	win->name = value->value.string_v;
 	return (true);
@@ -41,10 +41,10 @@ t_light		**read_lights(t_toml_table *toml, size_t *size)
 	t_toml		*v;
 	size_t		i;
 
-	if (read_toml_type(toml, &v, "lights", TOML_array) == false)
+	if (read_toml_type(toml, &v, "lights", TOML_Array) == false)
 		return (NULL);
 	if (v->value.array_v->len == 0
-		|| v->value.array_v->inner[0].type != TOML_table)
+		|| v->value.array_v->inner[0].type != TOML_Table)
 		return (NULL);
 	*size = v->value.array_v->len;
 	if (!(lights = malloc(sizeof(t_light*) * *size)))
@@ -65,10 +65,10 @@ t_object	**read_objects(t_toml_table *toml, size_t *size)
 	t_toml			*v;
 	size_t			i;
 
-	if (read_toml_type(toml, &v, "objects", TOML_array) == false)
+	if (read_toml_type(toml, &v, "objects", TOML_Array) == false)
 		return (NULL);
 	if (v->value.array_v->len == 0
-		|| v->value.array_v->inner[0].type != TOML_table)
+		|| v->value.array_v->inner[0].type != TOML_Table)
 		return (NULL);
 	*size = v->value.array_v->len;
 	if (!(objs = malloc(sizeof(t_object*) * *size)))
@@ -88,13 +88,13 @@ bool		read_camera(t_toml_table *toml, t_cam *cam)
 	t_toml	*camera;
 	t_toml	*value;
 
-	if (!read_toml_type(toml, &camera, "camera", TOML_table))
+	if (!read_toml_type(toml, &camera, "camera", TOML_Table))
 		return (false);
-	if (!read_toml_type(camera->value.table_v, &value, "position", TOML_table))
+	if (!read_toml_type(camera->value.table_v, &value, "position", TOML_Table))
 		return (false);
 	if (!read_t_vec3(value->value.table_v, &cam->pos))
 		return (false);
-	if (!read_toml_type(camera->value.table_v, &value, "rotation", TOML_table))
+	if (!read_toml_type(camera->value.table_v, &value, "rotation", TOML_Table))
 		return (false);
 	if (!read_t_vec3(value->value.table_v, &cam->rot))
 		return (false);
