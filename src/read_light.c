@@ -54,21 +54,21 @@ t_light		*read_light(t_toml_table *toml)
 	if (!(light = malloc(sizeof(t_light))))
 		return (NULL);
 	if (read_toml_type(toml, &type, "position", TOML_Table) == false)
-		return (NULL);
+		return (nfree(light));
 	if (!read_t_vec3(type->value.table_v, &light->pos))
-		return (NULL);
+		return (nfree(light));
 	if (read_toml_type(toml, &type, "color", TOML_Table) == false)
-		return (NULL);
+		return (nfree(light));
 	if (!read_color(type->value.table_v, &light->color))
-		return (NULL);
+		return (nfree(light));
 	if (!(type = table_get(toml, "intensity")))
-		return (NULL);
+		return (nfree(light));
 	if (read_digit(type, &light->intensity) == false)
-		return (NULL);
+		return (nfree(light));
 	if (!(type = table_get(toml, "expose")))
-		return (NULL);
+		return (nfree(light));
 	if (read_digit(type, &expose) == false)
-		return (NULL);
+		return (nfree(light));
 	light->expose = expose;
 	return (light);
 }

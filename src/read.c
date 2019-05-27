@@ -54,7 +54,7 @@ t_light		**read_lights(t_toml_table *toml, size_t *size)
 	while (i < *size)
 	{
 		if (!(lights[i] = read_light(v->value.array_v->inner[i].value.table_v)))
-			return (NULL);
+			return (free_ptr_array((void **)lights, i));
 		i++;
 	}
 	return (lights);
@@ -78,7 +78,7 @@ t_object	**read_objects(t_toml_table *toml, size_t *size)
 	while (i < *size)
 	{
 		if (!(objs[i] = read_object(v->value.array_v->inner[i].value.table_v)))
-			return (NULL);
+			return (free_ptr_array((void **)objs, i));
 		i++;
 	}
 	return (objs);

@@ -1,22 +1,23 @@
 #include "rtv1.h"
 
-void	free_scene(t_scene *scene)
+void	*free_ptr_array(void **array, size_t size)
 {
 	size_t	i;
 
 	i = 0;
-	while (i < scene->objects_size)
+	while (i < size)
 	{
-		free(scene->objects[i]);
+		free(array[i]);
 		i++;
 	}
-	free(scene->objects);
+	free(array);
+	return (NULL);
+}
 
-	i = 0;
-	while (i < scene->lights_size)
-	{
-		free(scene->lights[i]);
-		i++;
-	}
-	free(scene->lights);
+void	free_scene(t_scene *scene)
+{
+	if (scene->objects)
+		free_ptr_array((void **)scene->objects, scene->objects_size);
+	if (scene->lights)
+		free_ptr_array((void **)scene->lights, scene->lights_size);
 }
