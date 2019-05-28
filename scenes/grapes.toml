@@ -41,8 +41,6 @@ height = 1440
 	color = { r = 92, g = 40, b = 57}
 	position = { x = 0.33, y = -0.14, z = -3.01 }
 
-
-
 [[lights]]
 	position = {x = 0, y = 0, z = 0}
 	color = { r = 255, g = 255, b = 255 }

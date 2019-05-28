@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 11:14:16 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 14:01:18 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/28 10:44:23 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ bool	read_color(t_toml_table *toml, t_color *color)
 	return (true);
 }
 
-t_light		*read_light(t_toml_table *toml)
+t_light	*read_light(t_toml_table *toml)
 {
 	t_toml	*type;
 	t_light	*light;

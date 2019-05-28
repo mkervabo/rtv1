@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 11:20:15 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 11:30:37 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/28 10:48:58 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ static void	render(t_scene *scene, t_cam camera, t_win *window)
 	if (init_window(window))
 	{
 		raytrace(scene, camera, window);
-		//while (!window->quit)
-		//	poll_events(window);
+		while (!window->quit)
+			poll_events(window);
 	}
 	destroy_window(window);
 }
@@ -91,19 +91,9 @@ bool		render_scene(t_toml_table *toml)
 		free_toml_table(toml);
 		return (false);
 	}
-	if (!(scene.lights = read_lights(toml, &scene.lights_size)))
-	{
-		free_scene(&scene);
-		free_toml_table(toml);
-		return (false);
-	}
-	if (!read_camera(toml, &camera))
-	{
-		free_scene(&scene);
-		free_toml_table(toml);
-		return (false);
-	}
-	if (!read_window(toml, &window))
+	if (!(scene.lights = read_lights(toml, &scene.lights_size))
+		|| !read_camera(toml, &camera)
+		|| !read_window(toml, &window))
 	{
 		free_scene(&scene);
 		free_toml_table(toml);
