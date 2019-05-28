@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/26 15:37:58 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 11:42:05 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/28 14:38:06 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ double		receive_light(t_light *light, t_vec3 p, t_object *objects[],
 	to_light = vec3_sub(light->pos, p);
 	dist = vec3_length(to_light);
 	direction = vec3_divv(to_light, dist);
-	shadow = (t_ray){
+	shadow = (t_ray) {
 		.origin = p,
 		.direction = direction
 	};

@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 11:51:30 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 13:59:45 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/28 14:37:33 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool		apply_light(t_color *clr_light, t_ray *r, t_who t, t_scene *s)
 		vec3_multv(t.hit.n, SHADOW_BIAS));
 	while (++i < s->lights_size)
 		if ((distance = receive_light(s->lights[i], p,
-					s->objects, s->objects_size)) >= 0)
+						s->objects, s->objects_size)) >= 0)
 		{
 			if (s->objects[t.i]->light == Light_Phong)
 				clr = phong(s->lights[i], t.hit, r);

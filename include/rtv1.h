@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 17:11:32 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 13:59:24 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/28 15:02:39 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,10 @@
 # include <SDL.h>
 
 # define SHADOW_BIAS 1e-4
+# define WINDOW_ERR "Could not create window: "
+# define ERR_INVALID_FILE "Error Invalid file\n"
+# define USAGE_PRE "Usage: "
+# define USAGE_POST " [scene.toml]\n"
 
 typedef struct	s_polynome
 {
@@ -197,5 +201,6 @@ bool			apply_light(t_color *clr_light, t_ray *ray, t_who t,
 				t_scene *s);
 void			free_scene(t_scene *scene);
 void			*free_ptr_array(void **array, size_t size);
+size_t			ft_strlen(const char *s);
 
 #endif
