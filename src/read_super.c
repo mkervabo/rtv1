@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/21 14:16:01 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/22 14:02:35 by mkervabo         ###   ########.fr       */
+/*   Updated: 2019/05/29 13:41:51 by mkervabo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ bool		read_t_vec3(t_toml_table *toml, t_vec3 *vec)
 
 	if (!(value = table_get(toml, "x")))
 		vec->x = 0;
-	if (read_digit(value, &vec->x) == false)
+	else if (read_digit(value, &vec->x) == false)
 		return (false);
 	if (!(value = table_get(toml, "y")))
 		vec->y = 0;
-	if (read_digit(value, &vec->y) == false)
+	else if (read_digit(value, &vec->y) == false)
 		return (false);
 	if (!(value = table_get(toml, "z")))
-		vec->x = 0;
-	if (read_digit(value, &vec->z) == false)
+		vec->z = 0;
+	else if (read_digit(value, &vec->z) == false)
 		return (false);
 	return (true);
 }
