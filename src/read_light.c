@@ -29,19 +29,22 @@ bool	read_color(t_toml_table *toml, t_color *color)
 
 	if (!(value = table_get(toml, "r")))
 		color->r = 0;
-	if (value->type != TOML_Integer)
+	else if (value->type != TOML_Integer)
 		return (false);
-	color->r = value->value.integer_v;
+	else
+		color->r = value->value.integer_v;
 	if (!(value = table_get(toml, "g")))
 		color->g = 0;
-	if (value->type != TOML_Integer)
+	else if (value->type != TOML_Integer)
 		return (false);
-	color->g = value->value.integer_v;
+	else
+		color->g = value->value.integer_v;
 	if (!(value = table_get(toml, "b")))
 		color->r = 0;
-	if (value->type != TOML_Integer)
+	else if (value->type != TOML_Integer)
 		return (false);
-	color->b = value->value.integer_v;
+	else
+		color->b = value->value.integer_v;
 	return (true);
 }
 
