@@ -100,6 +100,7 @@ bool		render_scene(t_toml_table *toml)
 	}
 	free_toml_table(toml);
 	render(&scene, camera, &window);
+	free(window.name);
 	free_scene(&scene);
 	return (true);
 }
