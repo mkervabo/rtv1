@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/22 11:20:15 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/28 14:41:27 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2019/06/25 17:35:54 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ bool		render_scene(t_toml_table *toml)
 	}
 	free_toml_table(toml);
 	render(&scene, camera, &window);
-	free(window.name);
 	free_scene(&scene);
 	return (true);
 }
