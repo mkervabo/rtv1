@@ -6,7 +6,7 @@
 /*   By: mkervabo <mkervabo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/20 15:39:35 by mkervabo          #+#    #+#             */
-/*   Updated: 2019/05/28 15:02:46 by dde-jesu         ###   ########.fr       */
+/*   Updated: 2019/06/25 17:27:26 by dde-jesu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,5 @@ int				main(int argc, char *argv[])
 	if ((err = read_toml(&r, &toml, true)) != No_Error)
 		return (print_toml_error(&r, err, argv[1]));
 	close(fd);
-	render_scene(toml);
-	return (0);
+	return (render_scene(toml) ? 0 : 1);
 }
